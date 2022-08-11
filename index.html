@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Talkdesk</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .header {
+        height: 52px;
+        box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+      }
+
+      .content {
+        margin: 56px 0 64px 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      nav {
+        max-width: 1440px;
+        padding: 0 1.5em;
+        margin: 0 auto;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 1.375rem;
+        font-weight: 400;
+        font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      }
+
+      p {
+        font-size: 0.8125rem;
+        font-weight: 400;
+        font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        color: #6f767d;
+      }
+
+      a {
+        color: #005cde;
+        cursor: pointer;
+      }
+
+      .icon {
+        margin-bottom: 28px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="header">
+      <nav>
+        <img
+          src="//prd-cdn-talkdesk.talkdesk.com/cdn-assets/latest/talkdesk/brand/main_brand/logo/talkdesk_r_logo.svg"
+          alt="Talkdesk"
+          width="100"
+          height="20"
+        />
+      </nav>
+    </div>
+    <div class="content">
+      <svg class="icon" height="48" width="48" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="m4 6h18v-2h-18c-1.1 0-2 .9-2 2v11h-2v3h14v-3h-10zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-10c0-.55-.45-1-1-1zm-1 9h-4v-7h4z"
+          fill="#005cde"
+        />
+      </svg>
+      <h1>We launched Talkdesk</h1>
+      <p>
+        Talkdesk did not launch?
+        <a id="retry">Retry</a>
+      </p>
+    </div>
+    <script>
+      function getQueryVariable(variable) {
+        var query = window.location.hash.substring(1)
+        var vars = decodeURIComponent(query).split('&')
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=')
+          if (pair[0] == variable) {
+            return pair[1]
+          }
+        }
+        return false
+      }
+
+      function launch() {
+        var obj = {
+          facebook_access_token: getQueryVariable('access_token')
+        }
+
+        if (!obj.facebook_access_token) {
+          return
+        }
+
+        const queryString = Object.keys(obj)
+          .map((key) => {
+            return `${key}=${obj[key]}`
+          })
+          .join('&')
+
+        if (window.opener) {
+          window.opener.postMessage(queryString, '*')
+          window.close()
+        } else {
+          window.location.assign(`td+oauth2:dce_facebook_callback?${queryString}`)
+        }
+      }
+
+      launch()
+
+      document.getElementById('retry').addEventListener('click', launch)
+    </script>
+  </body>
+</html>
